@@ -3,7 +3,7 @@
 **Money Collector Game** is a simple 2D platformer game where players collect coins while avoiding spikes. The game features multiple levels, rotating coins, moving spikes, and a vertical scrolling mechanic.
 This project was inspired by [Skydron](https://openprocessing.org/sketch/2219220), an incredible game that influenced many of the mechanics and ideas used in this project.
 
-![Game Screenshot](data/Game 1.png)
+![Game Screenshot](data/Game1.png)
 
 ---
 
