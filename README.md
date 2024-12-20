@@ -1,8 +1,7 @@
-# Money-Collector-Game
 # Money Collector Game
-
 ## Overview
 **Money Collector Game** is a simple 2D platformer game where players collect coins while avoiding spikes. The game features multiple levels, rotating coins, moving spikes, and a vertical scrolling mechanic.
+This project was inspired by [Skydron](https://openprocessing.org/sketch/2219220), an incredible game that influenced many of the mechanics and ideas used in this project.
 
 ![Game Screenshot](path/to/screenshot.png)
 
@@ -41,9 +40,9 @@ The player navigates through platforms, collects coins, and avoids spikes.
 ## Instructions for Developers
 ### Prerequisites
 - Download and install [Processing 3](https://processing.org/).
-- Ensure the game assets (sounds, sprites) are in the `data` folder within the Processing sketch folder.
+- The game assets (sounds) are in the Processing Sketch folder.
 
 ### How to Run
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/money-collector-game.git
+   git clone https://github.com/ABOSALAH2020/Money-Collector-Game
