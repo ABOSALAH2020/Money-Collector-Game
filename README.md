@@ -34,8 +34,7 @@ The main menu provides options to:
 - Learn about the developers.
 
 ### Gameplay
-
-The player navigates through platforms, collects coins, and avoids spikes.
+###The player navigates through platforms, collects coins, and avoids spikes.
 ---
 
 ## Instructions for Developers
