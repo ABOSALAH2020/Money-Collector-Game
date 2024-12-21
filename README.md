@@ -16,6 +16,23 @@ This project was inspired by [Skydron](https://openprocessing.org/sketch/2219220
 
 ---
 
+## Game Elements
+1. **Player Character**
+   - Black square with white center circle
+   - Controlled using arrow keys
+   - Dynamic movement with gravity physics
+2. **Platforms**
+   - Static platforms (gray blocks)
+   - Moving platforms (horizontal/vertical movement)
+3. **Collectibles**
+   - Regular coins (yellow circles)
+   - Rotating coins (animated yellow coins with center detail)
+4. **Obstacles**
+   - Static spikes (red triangles)
+   - Moving spikes (red triangles with vertical movement)
+
+---
+
 ## How to Play
 1. Use the arrow keys to control the player:
    - **UP**: Jump.
@@ -33,8 +50,8 @@ The main menu provides options to:
 - View instructions.
 - Learn about the developers.
 
-### Gameplay
-### The player navigates through platforms, collects coins, and avoids spikes.
+## Gameplay
+#### The player navigates through platforms, collects coins, and avoids spikes.
 ---
 
 ## Instructions for Developers
@@ -46,7 +63,11 @@ The main menu provides options to:
 1. Clone this repository:
    ```bash
    git clone https://github.com/ABOSALAH2020/Money-Collector-Game
-
+2. **Install Processing 3:** Download and install from the official website.
+3. **Install Minim Library:** Use Processing's Library Manager to install Minim.
+4. **Organize Files:** Ensure all `.pde` files and sound files are in the correct directories.
+5. **Run the Game:** Open the main `.pde` file in Processing and click the run button.
+   
 ---
 ## Files Structure 
 - **Button.pde:** Handles button creation and interactions in the menu.
@@ -82,7 +103,8 @@ In this game, levels are designed using a grid-like structure defined as a Strin
 ## Level Layout Example
 #### Level 1 Explanation
 
-``String[] level1 = {                                                                                      
+```processing
+String[] level1 = {                                                                                      
   "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
   "O_________________________V__***__V_______________________VVV______________VVVVVVV____________________O",
   "O__________________**____________________________**___________________________________________________O",
@@ -113,7 +135,7 @@ In this game, levels are designed using a grid-like structure defined as a Strin
   "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
   "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
-``
+```
 - Platforms `(O)`: Platforms are distributed throughout the level to provide a path for the player to navigate.
 - Spikes `(^ and V)`: Stationary spikes create hazards that the player must avoid by jumping or timing movements.
 - Coins `(*)`: Coins are placed in areas that encourage exploration and add extra challenges.
@@ -131,8 +153,279 @@ In this game, levels are designed using a grid-like structure defined as a Strin
 4. Test the Level:
    - Play the level to ensure it is challenging but fair.
    - Adjust the placement of collectibles and hazards for better balance.
+  
+---
 
 ## Signs and Symbols for Development
 - `case` Logic: Each `case` in the `switch` statement adds an element based on the character in the grid. Modify or add cases to introduce new mechanics. For example:
    - To add a new enemy type, you could define `case 'E'`: and create an `Enemy` class.
 - Coordinate System: The grid's X and Y coordinates correspond to the row and column indices of the `String[]`. Each element is positioned based on its grid location.
+
+
+---
+# Code Structure
+## Main Game Loop
+### Main.pde
+- **Imports:** Uses the Minim library for audio.
+- **Global Variables:** Manages game state, audio, and game objects.
+- **Setup Function:** Initializes the game window, loads sounds, and sets up the main menu.
+- **Draw Function:** Main game loop handling different game states (menu, game, instructions, developers).
+
+## Player Mechanics
+### Player.pde
+- **Attributes:** Position, speed, gravity, and score.
+- **Methods:**
+   - `update()`: Handles movement and collision.
+   - `display()`: Renders the player.
+   - `move(int dir)`: Controls horizontal movement.
+   - `jump()`: Implements jumping.
+  
+## Platforms
+### Platform.pde
+- **Attributes:** Position and size.
+- **Methods:**
+   - `display()`: Renders the platform.
+     
+### MovingPlatform.pde
+- **Attributes:** Inherits from Platform with additional speed attributes.
+- **Methods:**
+   - `update()`: Handles movement and collision.
+   - `display()`: Renders the moving platform.
+ 
+## Collectibles
+### Coin.pde
+- **Attributes:** Position and collection status.
+- **Methods:**
+   - `display()`: Renders the coin.
+   - `checkCollision(Player p)`: Checks if the player collects the coin.
+  
+### RotatingCoin.pde
+- **Attributes:** Position, angle, and collection status.
+- **Methods:**
+   - `display()`: Renders the rotating coin.
+   - `checkCollision(Player p)`: Checks if the player collects the rotating coin.
+     
+## Obstacles
+### Spikes.pde
+- **Attributes:** Position, size, and type (upward or downward).
+- **Methods:**
+   - `display()`: Renders the spikes.
+   - `checkCollision(Player p)`: Checks if the player hits the spikes.
+  
+### MovingSpikes.pde
+- **Attributes:** Position, movement amplitude, speed, and direction.
+- **Methods:**
+   - `update()`: Handles movement.
+   - `display()`: Renders the moving spikes.
+   - `checkCollision(Player p)`: Checks if the player hits the moving spikes.
+     
+## Level Design
+### Levels.pde
+- **Level Arrays:** Define the layout using characters for different elements (e.g., `O` for platforms, `*` for coins).
+  
+### LoadLevel.pde
+- **loadLevel(String[] level):** Parses level arrays to create game objects.
+  
+## User Interface
+### Button.pde
+- **Attributes:** Position, size, and label.
+- **Methods:**
+   - `display()`: Renders the button.
+   - `isHovered()`: Checks if the mouse is over the button.
+  
+## Audio
+- **Initialization:** Loads and plays background music and sound effects.
+- **Sound Effects:** Triggered on coin collection and level completion.
+   
+---
+# Code Explanation 
+
+## 1. Main Game Structure
+###   - Main.pde
+```processing 
+// Core game variables and initialization
+import ddf.minim.*;  // Audio library import
+
+// Audio Components
+Minim minim;
+AudioPlayer coinSound, failSound, winLevelSound, winGameSound, bgMusic;
+
+// Game Objects
+ArrayList<Platform> platforms;
+ArrayList<Spikes> spikes;
+ArrayList<Coin> coins;
+Player player;
+
+// Game State Variables
+float cameraX = 0;
+int currentLevel = 1;
+int gameState = 0;   // Game states: 0=Menu, 1=Game, 2=Instructions, 3=Developers
+```
+
+###    - Key Functions
+
+```processing
+void setup() {
+    // Initializes game components, loads sounds, creates buttons
+}
+
+void draw() {
+    // Main game loop handling different game states
+}
+
+void drawGame() {
+    // Handles main gameplay rendering and logic
+}
+
+void checkLevelCompletion() {
+    // Monitors game progress and level transitions
+}
+```
+## 2. Player System
+###    - Player.pde
+
+```processing
+class Player {
+    // Player properties
+    float x, y, speedX, speedY;
+    float GRAVITY = 0.4;
+    boolean inAir = true;
+    int SIZE = 20;
+    int score = 0;
+```
+###    - Key Methods:
+```processing
+void update() {
+    // Handles physics and collision detection
+}
+
+void display() {
+    // Renders player character with dynamic visual feedback
+}
+
+void move(int dir) {
+    // Controls horizontal movement
+}
+
+void jump() {
+    // Implements jumping mechanics
+}
+```
+
+## 3. Platform Systems
+###   - Platform.pde
+```processing
+class Platform {
+    float x, y, w, h;
+    
+    void display() {
+        // Basic platform rendering
+    }
+}
+```
+###   - MovingPlatform.pde
+```processing
+class MovingPlatform extends Platform {
+    float speedX, speedY;
+    
+    void update() {
+        // Handles platform movement and collision
+    }
+}
+```
+
+## 4. Collectible System
+###    - Coin.pde
+```processing
+class Coin {
+    float x, y;
+    boolean collected = false;
+    
+    void display() {
+        // Renders basic coin
+    }
+    
+    boolean checkCollision(Player p) {
+        // Handles coin collection
+    }
+}
+```
+
+###    - RotatingCoin.pde
+```processing
+class RotatingCoin {
+    float x, y, angle = 0;
+    
+    void display() {
+        // Renders animated rotating coin
+    }
+}
+```
+
+## 5. Obstacle System
+###    - Spikes.pde
+```processing
+class Spikes {
+    float x, y, w, h;
+    char type; // '^' or 'V'
+    
+    void display() {
+        // Renders spike obstacles
+    }
+    
+    boolean checkCollision(Player p) {
+        // Handles spike collision detection
+    }
+}
+```
+
+###    - MovingSpikes.pde
+```processing
+class MovingSpikes {
+    float startY, amplitude, speed;
+    boolean movingUp;
+    
+    void update() {
+        // Controls spike movement patterns
+    }
+}
+```
+
+## 6. Level System
+###    - Levels.pde
+```processing
+String[] level1 = {
+    // Level layout using character mapping
+    // O = Platform
+    // * = Coin
+    // ^ = Upward Spike
+    // V = Downward Spike
+    // @ = Player Start
+    // etc.
+};
+```
+
+###    - LoadLevel.pde
+```processing
+void loadLevel(String[] level) {
+    // Converts level string array into game objects
+    // Initializes platforms, coins, spikes, etc.
+}
+```
+
+## 7. UI System
+###    - Button.pde
+```processing
+class Button {
+    float x, y, w, h;
+    String label;
+    
+    void display() {
+        // Renders interactive buttons
+    }
+    
+    boolean isHovered() {
+        // Checks mouse interaction
+    }
+}
+```
